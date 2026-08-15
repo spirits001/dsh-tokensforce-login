@@ -13,12 +13,12 @@ const STYLE_ID = 'dsh-tokensforce-styles'
 
 const CSS = `
 .tf-dialog { width: min(66rem, calc(100vw - 3rem)); }
-.tf-lightbox { width: min(80rem, calc(100vw - 2.5rem)); }
+.tf-lightbox { width: min(80rem, calc(100vw - 2.5rem)); padding-bottom: 0; }
 .tf-body { display: flex; flex-direction: column; gap: 0.75rem; }
 .tf-narrow { width: 100%; max-width: 30rem; margin: 0 auto; }
 .tf-title { margin: 0; font-size: 1.1rem; font-weight: 600; }
 .tf-hint { margin: 0; color: var(--dsh-dim, #888); font-size: 0.85rem; line-height: 1.4; }
-.tf-frame { width: 100%; height: calc(100vh - 7rem); min-height: 30rem; display: block; border: none; border-radius: 24px 24px 0 0; background: transparent; }
+.tf-frame { width: 100%; height: calc(100vh - 7rem); min-height: 30rem; display: block; border: none; background: transparent; }
 .tf-skipChip { position: absolute; top: 10px; left: 12px; z-index: 2; padding: 0.15rem 0.6rem; border-radius: 999px; border: 1px solid var(--dsh-border, #555); background: var(--dsh-bg, rgba(127,127,127,0.35)); color: inherit; font-size: 0.78rem; cursor: pointer; opacity: 0.75; }
 .tf-skipChip:hover { opacity: 1; }
 .tf-list { display: flex; flex-direction: column; gap: 0.4rem; }
