@@ -73,7 +73,7 @@ export function TokensforceOnboarding(props: TokensforceOnboardingProps): ReactN
   if (decision !== 'prompt') return null
 
   return (
-    <WizardModal title={t('onboardingTitle')}>
+    <WizardModal title={t('onboardingTitle')} bare={state.phase === 'login'}>
       <WizardBody state={state} wizard={wizard} t={t} onToken={onToken} complete={complete} />
     </WizardModal>
   )
@@ -91,18 +91,16 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
   if (state.phase === 'login') {
     return (
       <>
-        <LoginFrame onToken={onToken} t={t} />
         {complete !== undefined && (
-          <div className="tf-actions">
-            <button type="button" className="tf-button" onClick={complete}>{t('skip')}</button>
-          </div>
+          <button type="button" className="tf-skipChip" onClick={complete}>{t('skip')}</button>
         )}
+        <LoginFrame onToken={onToken} t={t} />
       </>
     )
   }
   if (state.error === 'no-org' || state.error === 'no-group') {
     return (
-      <>
+      <div className="tf-narrow">
         <ErrorBox text={t(state.error === 'no-org' ? 'noOrg' : 'noGroup')} />
         <div className="tf-actions">
           <button type="button" className="tf-button" onClick={() => wizard.restart()}>
@@ -112,26 +110,28 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
             <button type="button" className="tf-button" onClick={complete}>{t('skip')}</button>
           )}
         </div>
-      </>
+      </div>
     )
   }
   if (state.error !== null) {
     return (
-      <>
+      <div className="tf-narrow">
         <ErrorBox text={state.error} onRetry={() => wizard.retry()} retryLabel={t('retry')} />
         {complete !== undefined && (
           <div className="tf-actions">
             <button type="button" className="tf-button" onClick={complete}>{t('skip')}</button>
           </div>
         )}
-      </>
+      </div>
     )
   }
-  if (state.phase === 'linking') return <Busy text={t('loadingOrgs')} />
+  if (state.phase === 'linking') {
+    return <div className="tf-narrow"><Busy text={t('loadingOrgs')} /></div>
+  }
   if (state.phase === 'orgs') {
-    if (state.busy) return <Busy text={t('loadingOrgs')} />
+    if (state.busy) return <div className="tf-narrow"><Busy text={t('loadingOrgs')} /></div>
     return (
-      <>
+      <div className="tf-narrow">
         <p className="tf-hint">{t('chooseOrgHint')}</p>
         <div className="tf-list">
           {state.orgs.map(org => (
@@ -144,13 +144,13 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
             />
           ))}
         </div>
-      </>
+      </div>
     )
   }
   if (state.phase === 'groups') {
-    if (state.busy) return <Busy text={t('loadingOrgs')} />
+    if (state.busy) return <div className="tf-narrow"><Busy text={t('loadingOrgs')} /></div>
     return (
-      <>
+      <div className="tf-narrow">
         <p className="tf-hint">{t('chooseGroupHint')}</p>
         <div className="tf-list">
           {state.groups.map(group => (
@@ -162,12 +162,14 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
             />
           ))}
         </div>
-      </>
+      </div>
     )
   }
-  if (state.phase === 'saving') return <Busy text={t('saving')} />
+  if (state.phase === 'saving') {
+    return <div className="tf-narrow"><Busy text={t('saving')} /></div>
+  }
   return (
-    <>
+    <div className="tf-narrow">
       <p className="tf-hint">{t('savedDescription')}</p>
       {complete !== undefined && (
         <div className="tf-actions">
@@ -176,6 +178,6 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
           </button>
         </div>
       )}
-    </>
+    </div>
   )
 }

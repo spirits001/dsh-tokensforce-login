@@ -5,7 +5,7 @@
  * this component validates by origin and forwards.
  */
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { SITE_ORIGIN } from './logic.ts'
 import { ensureStyles } from './chrome.tsx'
@@ -56,11 +56,20 @@ export function LoginFrame({ onToken, t }: {
     return () => { window.removeEventListener('message', listener) }
   }, [onToken])
 
+  // Computed once per mount: a changing src would reload the iframe and wipe
+  // the user's in-progress form. The cache-buster defeats a stale cached
+  // login document whose hashed asset links a redeploy has retired — the
+  // "page loads without styles" failure.
+  const src = useMemo(() => {
+    const cacheTag = Date.now().toString(36)
+    return `${SITE_ORIGIN}/login?embed=${encodeURIComponent(window.location.origin)}&theme=${detectTheme()}&cb=${cacheTag}`
+  }, [])
+
   return (
     <iframe
       className="tf-frame"
       title={t('loginFrameTitle')}
-      src={`${SITE_ORIGIN}/login?embed=${encodeURIComponent(window.location.origin)}&theme=${detectTheme()}`}
+      src={src}
     />
   )
 }

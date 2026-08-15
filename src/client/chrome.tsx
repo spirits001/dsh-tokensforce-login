@@ -13,10 +13,14 @@ const STYLE_ID = 'dsh-tokensforce-styles'
 
 const CSS = `
 .tf-dialog { width: min(66rem, calc(100vw - 3rem)); }
+.tf-lightbox { width: min(80rem, calc(100vw - 2.5rem)); }
 .tf-body { display: flex; flex-direction: column; gap: 0.75rem; }
+.tf-narrow { width: 100%; max-width: 30rem; margin: 0 auto; }
 .tf-title { margin: 0; font-size: 1.1rem; font-weight: 600; }
 .tf-hint { margin: 0; color: var(--dsh-dim, #888); font-size: 0.85rem; line-height: 1.4; }
-.tf-frame { width: 100%; height: min(42rem, calc(100vh - 11rem)); border: 1px solid var(--dsh-border, #555); border-radius: 6px; background: transparent; }
+.tf-frame { width: 100%; height: calc(100vh - 7rem); min-height: 30rem; display: block; border: none; border-radius: 24px 24px 0 0; background: transparent; }
+.tf-skipChip { position: absolute; top: 10px; left: 12px; z-index: 2; padding: 0.15rem 0.6rem; border-radius: 999px; border: 1px solid var(--dsh-border, #555); background: var(--dsh-bg, rgba(127,127,127,0.35)); color: inherit; font-size: 0.78rem; cursor: pointer; opacity: 0.75; }
+.tf-skipChip:hover { opacity: 1; }
 .tf-list { display: flex; flex-direction: column; gap: 0.4rem; }
 .tf-option { display: flex; align-items: baseline; gap: 0.5rem; text-align: left; padding: 0.5rem 0.7rem; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .tf-option:hover { border-color: var(--dsh-accent, #4a9eff); }
@@ -46,9 +50,15 @@ const ignoreImplicitDismiss = (): void => {}
 
 /**
  * Blocking dialog with the application root kept inert, matching the
- * onboarding chrome contract the settings shell expects from steps.
+ * onboarding chrome contract the settings shell expects from steps. The bare
+ * variant carries no wizard chrome of its own — the embedded login page IS
+ * the dialog face.
  */
-export function WizardModal({ title, children }: { title: string; children: ReactNode }): ReactNode {
+export function WizardModal({ title, children, bare = false }: {
+  title: string
+  children: ReactNode
+  bare?: boolean
+}): ReactNode {
   const titleRef = useRef<HTMLHeadingElement | null>(null)
   useEffect(() => {
     const appRoot = document.getElementById('root')
@@ -57,7 +67,14 @@ export function WizardModal({ title, children }: { title: string; children: Reac
     appRoot.inert = true
     return () => { appRoot.inert = previous }
   }, [])
-  useEffect(() => { titleRef.current?.focus() }, [])
+  useEffect(() => { if (!bare) titleRef.current?.focus() }, [bare])
+  if (bare) {
+    return (
+      <Modal open title={title} onClose={ignoreImplicitDismiss} headless className="tf-lightbox">
+        {children}
+      </Modal>
+    )
+  }
   return (
     <Modal open title={title} onClose={ignoreImplicitDismiss} headless className="tf-dialog">
       <div className="tf-body">

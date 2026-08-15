@@ -17,10 +17,10 @@
 
 站点需支持**嵌入登录**（本仓库配套的 tokensforce 改动）：
 
-1. `nginx/default.conf` 的 `location = /login` 放行嵌入（不发 `X-Frame-Options`）；
-2. 管理后台「系统设置 → 可嵌入登录页的应用来源」填入 dsh 的来源，如
-   `http://127.0.0.1:3080`（即 `embed_allowed_origins` 设置，逗号分隔，留空拒绝全部）；
-3. 登录页识别 `?embed=<parent_origin>`，成功后 `postMessage({type: 'tokensforce:login', token}, parent_origin)`。
+1. `nginx/default.conf` 的 `location = /login` 放行嵌入（不发 `X-Frame-Options`，响应 `Cache-Control: no-cache`）；
+2. 登录页识别 `?embed=<parent_origin>`（无白名单，任意来源可嵌），成功后
+   `postMessage({type: 'tokensforce:login', token}, parent_origin)`；
+3. `?theme=dark|light` 可固定明暗；插件侧另附 `&cb=` 防缓存参数规避发版后的旧文档缓存。
 
 ## 安装
 
