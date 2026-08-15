@@ -1,38 +1,42 @@
-# dsh-tokensforce
+# dsh-tokensforce-login
 
-[TokensForce](https://tokensforce.com) 的 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）插件：把 tokensforce 网关做成 dsh 的模型提供方，登录即配置。
+[TokensForce](https://tokensforce.com) 的 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）插件：把 tokensforce 网关做成 dsh 的模型提供方，**登录即配置**。
 
 ## 它做什么
 
-- **首跑登录向导**：dsh web 首次启动且没有任何可用模型时，弹出「连接 TokensForce」向导——
-  填服务地址 → 弹层内嵌 tokensforce 登录页（邮箱验证码 + 验证码都由站点自己处理）→
-  多企业选企业、多组选组（只有一个则自动跳过）→ 自动把该组的 API Key 与网关地址写入模型配置。
+- **首跑登录向导**：dsh web 首次启动且没有任何可用模型时，自动弹出近全屏灯箱，
+  1:1 渲染 tokensforce 站点登录页（邮箱验证码、滑块验证都由站点自己处理）。
+  登录后多企业选企业、多组选组（只有一个则自动跳过），自动把该组的 API Key
+  与网关地址写入模型配置，全程无需手填任何东西。
 - **复用官方引擎**：提供方走 dsh 自带的 `llm-pi-ai`（OpenAI 兼容协议），每组写入一个
   `tokensforce-<组ID>` provider 档；官方 DeepSeek 路由（`llm-deepseek`）由本插件的 patch 层禁用。
-- **设置页继续加组**：设置 → TokensForce 卡片一键再走一遍选组流程；Models 页也能用
-  pi-ai 的通用编辑器手动管理。
-- 密钥经 dsh 凭据机制（`credentials.set`）存在宿主侧，浏览器只保留登录态（JWT，7 天）。
+- **再加组**：设置面板头部「连接 TokensForce」按钮随时重开向导（登录态 7 天内免重登，
+  直达选组）；「模型」页里每个组都是一行，可编辑/删除/发现模型。
+- 密钥经 dsh 凭据机制（`credentials.set`）存在宿主侧；浏览器只留登录态（JWT）。
+- 灯箱跟随 dsh 明暗主题（`&theme=`），并附 `&cb=` 防缓存参数规避发版后旧文档缓存。
 
 ## 前置条件（tokensforce 侧）
 
-站点需支持**嵌入登录**（本仓库配套的 tokensforce 改动）：
+站点需支持**嵌入登录**（配套的 tokensforce 仓库改动，已在生产）：
 
-1. `nginx/default.conf` 的 `location = /login` 放行嵌入（不发 `X-Frame-Options`，响应 `Cache-Control: no-cache`）；
+1. `nginx` 的 `location = /login` 放行嵌入（不发 `X-Frame-Options`，响应 `Cache-Control: no-cache`）；
 2. 登录页识别 `?embed=<parent_origin>`（无白名单，任意来源可嵌），成功后
    `postMessage({type: 'tokensforce:login', token}, parent_origin)`；
-3. `?theme=dark|light` 可固定明暗；插件侧另附 `&cb=` 防缓存参数规避发版后的旧文档缓存。
+3. `?theme=dark|light` 固定明暗。
 
 ## 安装
 
 ```sh
 dsh plugin --profile web add dsh-tokensforce-login        # 从 npm（发布后）
-dsh plugin --profile web add /path/to/dsh-tokensforce      # 本地路径
+dsh plugin --profile web add github:spirits001/dsh-tokensforce-login   # 从 GitHub
+dsh plugin --profile web add /path/to/dsh-tokensforce-login            # 本地路径
 dsh web
 ```
 
 > pnpm ≥10 在 profile workspace root 上执行 `add` 时如报 `ERR_PNPM_ADDING_TO_ROOT`，
 > 可手动在 `~/.dsh/profiles/web` 下 `pnpm add -w <包>` 并把包名追加进
 > `package.json` 的 `dsh.profile.bundles`，效果等同。
+> 从 GitHub 安装需要仓库带 `prepare` 脚本先构建（见下「发布到 npm」）。
 
 ## 开发
 
@@ -46,29 +50,32 @@ pnpm build       # 产出 lib/index.js（node half）+ lib/client.js（浏览器
 浏览器产物是 `window.__ModuleLoader__.load` 包装的 CJS bundle，外部依赖仅限
 dsh 平台模块表（react 系、`dsh-client-ui-primitives`、`dsh-client-runtime/client`），
 其余一律内联；`@deepseek-ai/*` 值导入超出平台表会直接构建失败（纯度门禁）。
+界面样式使用 dsh 真实设计变量（`--dsw-alias-*`），自动跟随明暗主题。
 
 ### 目录
 
 ```
 cordis.patch.yml        # 禁用 llm-deepseek + 插入 ui-tokensforce client 行
 src/index.ts            # node half（空 apply，纯客户端插件）
-src/client/index.ts     # 注册 onboarding 步骤 + 设置卡片
-src/client/Onboarding.tsx   # 步骤外壳 + 向导各阶段渲染
-src/client/LoginFrame.tsx   # 服务地址表单 + iframe 嵌登录页 + postMessage
-src/client/Section.tsx      # 设置页 TokensForce 卡片（添加其他组）
+src/client/index.ts     # 注册 onboarding 步骤 + 设置头部动作按钮
+src/client/Onboarding.tsx   # 首跑步骤外壳 + 向导各阶段渲染
+src/client/LoginFrame.tsx   # 灯箱 iframe 嵌站点登录页 + postMessage 收 token
+src/client/Action.tsx       # 设置面板头部「连接 TokensForce」按钮
 src/client/store.ts     # ReadinessStore（三表 join）+ WizardController（状态机）
-src/client/logic.ts     # 纯逻辑（可单测，无 dsh 运行时依赖）
+src/client/logic.ts     # 纯逻辑（可单测，无 dsh 运行时依赖；SITE_ORIGIN 常量）
 src/client/api.ts       # tokensforce /api/* 浏览器直连客户端
+src/client/chrome.tsx   # 样式注入 + 弹窗/选项/按钮等共用件
 ```
 
 ### 向导流程
 
 ```
-login（直接 iframe 嵌 SITE_ORIGIN/login?embed=<dsh origin>&theme=<明暗>，大弹窗原样渲染站点登录页，收 token）
+login（iframe 嵌 SITE_ORIGIN/login?embed=<dsh origin>&theme=<明暗>&cb=<防缓存>，收 token）
   → linking（GET /api/user/orgs）
   → orgs（单个自动跳过，多个选择，必要时 switch-org 换 token）
   → groups（GET /api/user/groups；单个自动跳过，多个选择）
-  → saving（GET /api/user/key?group_id= 拿 host+models；
+  → saving（GET /api/user/key?group_id= 拿模型表；relay 地址用登录会话的 origin 拼接，
+           不信任网关回传 host 的 scheme；
            settings.mutate 写 llm-pi-ai providers.tokensforce-<gid>；
            credentials.set 写 TOKENSFORCE_<GID>_API_KEY）
   → done
@@ -80,11 +87,24 @@ login（直接 iframe 嵌 SITE_ORIGIN/login?embed=<dsh origin>&theme=<明暗>，
 readiness 与官方 DeepSeek 首跑步骤同构：已有任一可用 provider 即自动跳过，
 加载失败不弹窗，只有「已加载且无可用 provider」才出现向导。
 
+## 发布到 npm
+
+包名 `dsh-tokensforce-login`（无 scope，无需组织）。首次发布前：
+
+1. `package.json` 去掉 `"private": true`，确定 `license`（目前 UNLICENSED，见文末）；
+2. 在 [npmjs.com](https://npmjs.com) 注册账号后，仓库内 `npm login`；
+3. `pnpm build && npm publish`（`files` 已只含 `lib` 与 `cordis.patch.yml`）；
+4. 发布后用户即可 `dsh plugin --profile web add dsh-tokensforce-login` 一条命令安装。
+
+从 GitHub 直装（不发 npm 的替代路径）：需要 `package.json` 加
+`"prepare": "pnpm build"`，pnpm 拉 git 依赖时会自动构建。
+
 ## 版本对齐
 
 依赖锁定 `@deepseek-ai/dsh-*@0.1.0-rc.6`（当前 npm 版本）。dsh 处于开发者预览，
-升级时回归点：onboarding 步骤契约、`llm-pi-ai` 设置 schema、client bundle 纯度规则。
+升级时回归点：onboarding 步骤契约、`llm-pi-ai` 设置 schema、client bundle 纯度规则、
+`--dsw-alias-*` 变量名。
 
 ## License
 
-TBD
+TBD（发布 npm 前需确定）
