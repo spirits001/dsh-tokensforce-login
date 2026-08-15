@@ -238,7 +238,11 @@ export class WizardController {
     if (client === undefined) return
     this.store.update((s) => { s.selected = group; s.busy = true })
     const info = await client.keyInfo(group.group_id)
-    const draft = buildProviderDraft(info.host, group, info.models)
+    // The session origin, not the gateway-reported host, names the relay:
+    // the report derives its scheme from forwarded headers a deployment may
+    // not set, so an https login could otherwise mint an http baseURL.
+    const relayOrigin = this.store.getSnapshot().origin ?? info.host
+    const draft = buildProviderDraft(relayOrigin, group, info.models)
     this.store.update((s) => { s.phase = 'saving'; s.busy = true })
     const described = await this.api.settings.describe({})
     if (!described.result.ok) throw new Error(described.result.error.message)

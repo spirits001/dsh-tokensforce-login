@@ -100,7 +100,7 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
   }
   if (state.error === 'no-org' || state.error === 'no-group') {
     return (
-      <div className="tf-narrow">
+      <div>
         <ErrorBox text={t(state.error === 'no-org' ? 'noOrg' : 'noGroup')} />
         <div className="tf-actions">
           <button type="button" className="tf-button" onClick={() => wizard.restart()}>
@@ -115,7 +115,7 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
   }
   if (state.error !== null) {
     return (
-      <div className="tf-narrow">
+      <div>
         <ErrorBox text={state.error} onRetry={() => wizard.retry()} retryLabel={t('retry')} />
         {complete !== undefined && (
           <div className="tf-actions">
@@ -126,12 +126,12 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
     )
   }
   if (state.phase === 'linking') {
-    return <div className="tf-narrow"><Busy text={t('loadingOrgs')} /></div>
+    return <div><Busy text={t('loadingOrgs')} /></div>
   }
   if (state.phase === 'orgs') {
-    if (state.busy) return <div className="tf-narrow"><Busy text={t('loadingOrgs')} /></div>
+    if (state.busy) return <div><Busy text={t('loadingOrgs')} /></div>
     return (
-      <div className="tf-narrow">
+      <div>
         <p className="tf-hint">{t('chooseOrgHint')}</p>
         <div className="tf-list">
           {state.orgs.map(org => (
@@ -148,9 +148,9 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
     )
   }
   if (state.phase === 'groups') {
-    if (state.busy) return <div className="tf-narrow"><Busy text={t('loadingOrgs')} /></div>
+    if (state.busy) return <div><Busy text={t('loadingOrgs')} /></div>
     return (
-      <div className="tf-narrow">
+      <div>
         <p className="tf-hint">{t('chooseGroupHint')}</p>
         <div className="tf-list">
           {state.groups.map(group => (
@@ -166,10 +166,11 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
     )
   }
   if (state.phase === 'saving') {
-    return <div className="tf-narrow"><Busy text={t('saving')} /></div>
+    return <div><Busy text={t('saving')} /></div>
   }
   return (
-    <div className="tf-narrow">
+    <div className="tf-doneBody">
+      <div className="tf-doneMark" aria-hidden>✓</div>
       <p className="tf-hint">{t('savedDescription')}</p>
       {complete !== undefined && (
         <div className="tf-actions">
