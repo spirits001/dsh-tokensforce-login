@@ -1,20 +1,20 @@
 /**
  * Tokensforce plugin, browser half. It registers the login onboarding step
- * (the first-run way to obtain a gateway credential) and the TokensForce
- * settings card (the repeatable add-a-group path). Provider profiles land in
- * the stock `llm-pi-ai` namespace through the settings and credentials wire
- * APIs; no host-side services are contributed.
+ * (the first-run way to obtain a gateway credential) and a settings-header
+ * action (the repeatable add-a-group path, without a dedicated nav cell).
+ * Provider profiles land in the stock `llm-pi-ai` namespace through the
+ * settings and credentials wire APIs; no host-side services are contributed.
  */
 
 import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import type { ConnectionHandle } from '@deepseek-ai/dsh-api-remotes/client'
 // Type-only: pulls the settings shell's SlotMap merge (the
-// 'settings.onboarding' and 'settings.section' entries).
+// 'settings.onboarding' and 'settings.action' entries).
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
 import type {} from '@deepseek-ai/dsh-client-locale/client'
 import { TokensforceOnboarding } from './Onboarding.tsx'
-import { TokensforceSection } from './Section.tsx'
+import { TokensforceAction } from './Action.tsx'
 import type { TokensforceWizardInjected } from './Onboarding.tsx'
 import { ReadinessStore, WizardController } from './store.ts'
 import { en, zh, type TokensforceKey } from './locales.ts'
@@ -37,7 +37,7 @@ const NS = 'settings.tokensforce'
 export const inject = ['slots', 'locale', 'connection', 'remote']
 
 /**
- * Register the onboarding step and the settings section once their slot
+ * Register the onboarding step and the settings-header action once their slot
  * declarations are on the ledger, sharing one readiness join, one wizard
  * controller, and one wire face.
  * @param ctx - client root context.
@@ -63,11 +63,9 @@ export function apply(ctx: ClientContext): void {
     order: 10,
     inject: injected,
   }, TokensforceOnboarding))
-  ctx.slots.inject('settings.section', () => ctx.slots.register({
-    name: 'settings.section',
+  ctx.slots.inject('settings.action', () => ctx.slots.register({
+    name: 'settings.action',
     id: 'tokensforce',
-    order: 12,
-    label: () => t('nav'),
     inject: injected,
-  }, TokensforceSection))
+  }, TokensforceAction))
 }

@@ -1,9 +1,7 @@
 /** Copy dictionaries for the tokensforce plugin (zh + en). */
 
 export const zh = {
-  nav: 'TokensForce',
   onboardingTitle: '连接 TokensForce',
-  sectionDescription: '从你的 TokensForce 账号添加企业组作为模型提供方。',
   addGroup: '添加其他组',
   loginFrameTitle: 'TokensForce 登录',
   loadingOrgs: '正在获取企业列表…',
@@ -30,9 +28,7 @@ export const zh = {
 export type TokensforceKey = keyof typeof zh
 
 export const en: Record<TokensforceKey, string> = {
-  nav: 'TokensForce',
   onboardingTitle: 'Connect TokensForce',
-  sectionDescription: 'Add organization groups from your TokensForce account as model providers.',
   addGroup: 'Add another group',
   loginFrameTitle: 'TokensForce sign-in',
   loadingOrgs: 'Loading organizations…',

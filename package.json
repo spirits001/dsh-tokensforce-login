@@ -1,7 +1,7 @@
 {
   "name": "dsh-tokensforce-login",
   "description": "DeepSeek Harness plugin: tokensforce gateway login onboarding and provider profiles through dsh-llm-pi-ai",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "UNLICENSED",
   "private": true,
   "type": "module",

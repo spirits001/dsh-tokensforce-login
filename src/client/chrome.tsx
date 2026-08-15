@@ -36,6 +36,7 @@ const CSS = `
 .tf-spinner { width: 1rem; height: 1rem; border-radius: 50%; border: 2px solid var(--dsw-alias-border-l3, #444); border-top-color: var(--dsw-alias-brand-primary, #4a7dff); animation: tf-spin 0.8s linear infinite; }
 @keyframes tf-spin { to { transform: rotate(360deg); } }
 .tf-card { display: flex; flex-direction: column; gap: 0.5rem; }
+.tf-actionButton { padding: 0.3rem 0.75rem; font-size: 0.82rem; }
 .tf-doneMark { margin: 0 auto; width: 2.4rem; height: 2.4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--dsw-alias-brand-primary, #4a7dff); color: var(--dsw-alias-brand-primary, #4a7dff); font-size: 1.2rem; }
 .tf-doneBody { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.25rem 0 0.5rem; }
 `
