@@ -1,23 +1,23 @@
-# dsh-tokensforce-login
+# dsh-tokensforce
 
-[![npm version](https://img.shields.io/npm/v/dsh-tokensforce-login)](https://www.npmjs.com/package/dsh-tokensforce-login)
+[![npm version](https://img.shields.io/npm/v/dsh-tokensforce)](https://www.npmjs.com/package/dsh-tokensforce)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）接入 [TokensForce](https://tokensforce.com) 词元网关：**登录一次，模型即用**。不需要手动填 API Key，不需要改配置文件。
 
-![dsh-tokensforce-login](docs/banner.png)
+![dsh-tokensforce](docs/banner.png)
 
 ## 安装
 
 ```sh
-dsh plugin --profile web add dsh-tokensforce-login
+dsh plugin --profile web add dsh-tokensforce
 dsh web
 ```
 
 打开 `http://127.0.0.1:3080`，登录向导会自动弹出。
 
 > 如果 `dsh plugin add` 报 `ERR_PNPM_ADDING_TO_ROOT`（旧版 pnpm），在
-> `~/.dsh/profiles/web` 目录下手动 `pnpm add -w dsh-tokensforce-login`，
+> `~/.dsh/profiles/web` 目录下手动 `pnpm add -w dsh-tokensforce`，
 > 再把包名加入该目录 `package.json` 的 `dsh.profile.bundles` 列表即可。
 
 ## 使用
@@ -46,7 +46,7 @@ dsh web
 模型引擎仍走 dsh 自带的 OpenAI 兼容通道。卸载插件即恢复原状。
 
 **我们公司自己部署了 tokensforce，能用吗？**
-能。安装后把 `node_modules/dsh-tokensforce-login/lib/client.js` 里的
+能。安装后把 `node_modules/dsh-tokensforce/lib/client.js` 里的
 `SITE_ORIGIN` 改成你的站点地址并重启 dsh；站点侧需放行登录页嵌入
 （nginx 对 `/login` 不发 `X-Frame-Options` 等，可参考 tokensforce 的实现）。
 更正式的做法是 fork 本仓库，改 `src/client/logic.ts` 中的常量后自行构建。
@@ -58,7 +58,7 @@ dsh web
 
 ## 反馈
 
-- 使用问题：[Issues](https://github.com/spirits001/dsh-tokensforce-login/issues)
+- 使用问题：[Issues](https://github.com/spirits001/dsh-tokensforce/issues)
 - 维护与二次开发：见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License

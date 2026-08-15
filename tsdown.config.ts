@@ -8,7 +8,7 @@ import { defineConfig } from 'tsdown'
  * exemption). Everything else inlines; every @deepseek-ai value import beyond
  * the table is a bundling error by that same rule.
  */
-const PLUGIN_ID = 'dsh-tokensforce-login'
+const PLUGIN_ID = 'dsh-tokensforce'
 
 const PLATFORM_EXTERNALS = [
   'react', 'react/jsx-runtime', 'react-dom', 'react-dom/client', '@deepseek-ai/cordis',

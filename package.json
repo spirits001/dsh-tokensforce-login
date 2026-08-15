@@ -1,13 +1,13 @@
 {
-  "name": "dsh-tokensforce-login",
-  "description": "DeepSeek Harness plugin: tokensforce gateway login onboarding and provider profiles through dsh-llm-pi-ai",
+  "name": "dsh-tokensforce",
+  "description": "DeepSeek Harness plugin: tokensforce gateway integration \u2014 login onboarding, provider profiles, and the usage dashboard tab",
   "version": "0.4.0",
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spirits001/dsh-tokensforce-login.git"
+    "url": "git+https://github.com/spirits001/dsh-tokensforce.git"
   },
   "exports": {
     ".": "./lib/index.js",

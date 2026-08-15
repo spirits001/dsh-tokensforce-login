@@ -60,7 +60,7 @@ readiness 与官方 DeepSeek 首跑步骤同构：已有任一可用 provider �
 
 ## 发版
 
-已发布：[npm `dsh-tokensforce-login`](https://www.npmjs.com/package/dsh-tokensforce-login)，MIT。
+已发布：[npm `dsh-tokensforce`](https://www.npmjs.com/package/dsh-tokensforce)，MIT。
 流程：改动落库 → `package.json` 版本号 +1 → `pnpm build && npm publish`
 （2FA 账号需带 OTP；`files` 已只含 `lib` 与 `cordis.patch.yml`）。
 
