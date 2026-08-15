@@ -19,7 +19,7 @@ const LOGIN_MESSAGE = 'tokensforce:login'
  * follow it via the theme param. color-scheme first, then background
  * luminance, then the system preference.
  */
-function detectTheme(): 'dark' | 'light' {
+export function detectTheme(): 'dark' | 'light' {
   const scheme = getComputedStyle(document.documentElement).colorScheme
   if (scheme.includes('dark')) return 'dark'
   if (scheme.includes('light')) return 'light'
@@ -35,11 +35,14 @@ function detectTheme(): 'dark' | 'light' {
 /**
  * Run the site login in an iframe against the distribution's site.
  * @param props.onToken - called once with the site origin and the token.
+ * @param props.variant - 'full' sizes for the wizard lightbox (viewport-based
+ * height); 'panel' fills a host-provided container (dashboard tab).
  * @param props.t - feature copy.
  * @returns the embedded login window.
  */
-export function LoginFrame({ onToken, t }: {
+export function LoginFrame({ onToken, t, variant = 'full' }: {
   onToken: (origin: string, token: string) => void
+  variant?: 'full' | 'panel'
   t: (key: LoginKey) => string
 }): ReactNode {
   useEffect(() => { ensureStyles() }, [])
@@ -67,7 +70,7 @@ export function LoginFrame({ onToken, t }: {
 
   return (
     <iframe
-      className="tf-frame"
+      className={variant === 'panel' ? 'tf-panelFrame' : 'tf-frame'}
       title={t('loginFrameTitle')}
       src={src}
     />

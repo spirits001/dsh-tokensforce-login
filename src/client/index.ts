@@ -13,8 +13,12 @@ import type { ConnectionHandle } from '@deepseek-ai/dsh-api-remotes/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
 import type {} from '@deepseek-ai/dsh-client-locale/client'
+// Type-only: pulls the conversation package's SlotMap merge (the
+// 'conversation.view' tab entry).
+import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
 import { TokensforceOnboarding } from './Onboarding.tsx'
 import { TokensforceAction } from './Action.tsx'
+import { TokensforceView } from './View.tsx'
 import type { TokensforceWizardInjected } from './Onboarding.tsx'
 import { ReadinessStore, WizardController } from './store.ts'
 import { en, zh, type TokensforceKey } from './locales.ts'
@@ -68,4 +72,12 @@ export function apply(ctx: ClientContext): void {
     id: 'tokensforce',
     inject: injected,
   }, TokensforceAction))
+  // One more tab beside 对话/轨迹: the console dashboard, session-independent.
+  ctx.slots.inject('conversation.view', () => ctx.slots.register({
+    name: 'conversation.view',
+    id: 'tokensforce',
+    order: 20,
+    locale: NS,
+    label: () => t('viewLabel'),
+  }, TokensforceView))
 }

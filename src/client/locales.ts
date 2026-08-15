@@ -23,6 +23,8 @@ export const zh = {
   noOrg: '你的账号还不属于任何企业，请先在 TokensForce 网站上创建或加入企业。',
   noGroup: '当前企业还没有可用的组，请联系企业管理员。',
   anotherOrg: '换个账号登录',
+  viewLabel: 'TokensForce',
+  viewLoginHint: '登录 TokensForce 后可在此查看用量仪表盘。',
 } as const
 
 export type TokensforceKey = keyof typeof zh
@@ -50,4 +52,6 @@ export const en: Record<TokensforceKey, string> = {
   noOrg: 'Your account does not belong to any organization yet; create or join one on the TokensForce site first.',
   noGroup: 'This organization has no usable group yet; ask its administrators.',
   anotherOrg: 'Sign in with another account',
+  viewLabel: 'TokensForce',
+  viewLoginHint: 'Sign in to TokensForce to see your usage dashboard here.',
 }

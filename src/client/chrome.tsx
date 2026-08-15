@@ -37,6 +37,11 @@ const CSS = `
 @keyframes tf-spin { to { transform: rotate(360deg); } }
 .tf-card { display: flex; flex-direction: column; gap: 0.5rem; }
 .tf-actionButton { padding: 0.3rem 0.75rem; font-size: 0.82rem; }
+.tf-view { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.tf-viewHead { padding: 0.5rem 1rem 0; }
+.tf-viewLogin { flex: 1; display: flex; align-items: stretch; justify-content: center; padding: 0.75rem 1rem 1rem; min-height: 0; }
+.tf-panelFrame { width: 100%; height: 100%; border: 1px solid var(--dsw-alias-border-l2, rgba(127,127,127,0.4)); border-radius: 8px; background: transparent; }
+.tf-viewFrame { flex: 1; width: 100%; border: none; background: transparent; }
 .tf-doneMark { margin: 0 auto; width: 2.4rem; height: 2.4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--dsw-alias-brand-primary, #4a7dff); color: var(--dsw-alias-brand-primary, #4a7dff); font-size: 1.2rem; }
 .tf-doneBody { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1.25rem 0 0.5rem; }
 `
