@@ -1,0 +1,115 @@
+/**
+ * Shared chrome for the tokensforce wizard surfaces: one injected stylesheet
+ * (class prefix `tf-`) and the small building blocks the wizard and the
+ * settings card compose. Kept dependency-free besides the Modal primitive so
+ * the surfaces stay restyleable without touching flow code.
+ */
+
+import { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
+import { Modal } from '@deepseek-ai/dsh-client-ui-primitives'
+
+const STYLE_ID = 'dsh-tokensforce-styles'
+
+const CSS = `
+.tf-dialog { max-width: 30rem; }
+.tf-body { display: flex; flex-direction: column; gap: 0.75rem; }
+.tf-title { margin: 0; font-size: 1.1rem; font-weight: 600; }
+.tf-hint { margin: 0; color: var(--dsh-dim, #888); font-size: 0.85rem; line-height: 1.4; }
+.tf-label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.25rem; }
+.tf-input { width: 100%; box-sizing: border-box; padding: 0.45rem 0.6rem; font: inherit; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; }
+.tf-frame { width: 100%; height: 24rem; border: 1px solid var(--dsh-border, #555); border-radius: 6px; background: #fff; }
+.tf-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.tf-option { display: flex; align-items: baseline; gap: 0.5rem; text-align: left; padding: 0.5rem 0.7rem; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.tf-option:hover { border-color: var(--dsh-accent, #4a9eff); }
+.tf-optionName { font-weight: 600; }
+.tf-optionMeta { color: var(--dsh-dim, #888); font-size: 0.8rem; }
+.tf-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.25rem; }
+.tf-button { padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.tf-button:disabled { opacity: 0.5; cursor: default; }
+.tf-primary { border-color: var(--dsh-accent, #4a9eff); background: var(--dsh-accent, #4a9eff); color: #fff; }
+.tf-error { margin: 0; padding: 0.5rem 0.7rem; border-radius: 6px; border: 1px solid #b33; color: #d66; font-size: 0.85rem; }
+.tf-busy { display: flex; align-items: center; gap: 0.5rem; color: var(--dsh-dim, #888); font-size: 0.9rem; }
+.tf-spinner { width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 2px solid var(--dsh-border, #555); border-top-color: var(--dsh-accent, #4a9eff); animation: tf-spin 0.8s linear infinite; }
+@keyframes tf-spin { to { transform: rotate(360deg); } }
+.tf-card { display: flex; flex-direction: column; gap: 0.5rem; }
+`
+
+/** Insert the stylesheet once per document. */
+export function ensureStyles(): void {
+  if (document.getElementById(STYLE_ID) !== null) return
+  const style = document.createElement('style')
+  style.id = STYLE_ID
+  style.textContent = CSS
+  document.head.append(style)
+}
+
+const ignoreImplicitDismiss = (): void => {}
+
+/**
+ * Blocking dialog with the application root kept inert, matching the
+ * onboarding chrome contract the settings shell expects from steps.
+ */
+export function WizardModal({ title, children }: { title: string; children: ReactNode }): ReactNode {
+  const titleRef = useRef<HTMLHeadingElement | null>(null)
+  useEffect(() => {
+    const appRoot = document.getElementById('root')
+    if (appRoot === null) return
+    const previous = appRoot.inert
+    appRoot.inert = true
+    return () => { appRoot.inert = previous }
+  }, [])
+  useEffect(() => { titleRef.current?.focus() }, [])
+  return (
+    <Modal open title={title} onClose={ignoreImplicitDismiss} headless className="tf-dialog">
+      <div className="tf-body">
+        <h2 ref={titleRef} className="tf-title" tabIndex={-1}>{title}</h2>
+        {children}
+      </div>
+    </Modal>
+  )
+}
+
+/** One selectable row of an org/group picker. */
+export function OptionRow({
+  name, meta, badge, onPick, disabled,
+}: {
+  name: string
+  meta?: string
+  badge?: string
+  onPick: () => void
+  disabled?: boolean
+}): ReactNode {
+  return (
+    <button type="button" className="tf-option" onClick={onPick} disabled={disabled}>
+      <span className="tf-optionName">{name}</span>
+      {badge !== undefined && <span className="tf-optionMeta">{badge}</span>}
+      {meta !== undefined && <span className="tf-optionMeta">{meta}</span>}
+    </button>
+  )
+}
+
+/** Inline busy indicator with text. */
+export function Busy({ text }: { text: string }): ReactNode {
+  return (
+    <div className="tf-busy"><span className="tf-spinner" aria-hidden />{text}</div>
+  )
+}
+
+/** Failure text with optional retry. */
+export function ErrorBox({ text, onRetry, retryLabel }: {
+  text: string
+  onRetry?: () => void
+  retryLabel?: string
+}): ReactNode {
+  return (
+    <>
+      <p className="tf-error">{text}</p>
+      {onRetry !== undefined && (
+        <div className="tf-actions">
+          <button type="button" className="tf-button" onClick={onRetry}>{retryLabel}</button>
+        </div>
+      )}
+    </>
+  )
+}

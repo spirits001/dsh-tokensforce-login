@@ -1,0 +1,15 @@
+# dsh-tokensforce bundle layer.
+#
+# The tokensforce gateway replaces the official DeepSeek route as the primary
+# model provider: llm-deepseek is disabled so its first-run key prompt cannot
+# appear, and provider profiles are written into the llm-pi-ai namespace (the
+# OpenAI-completions engine this bundle reuses) by the login onboarding wizard.
+# Rows are applied above dsh-base; a patch replaces a target row's whole
+# config, so any llm-deepseek re-enable must restate every field it needs.
+
+- id: llm-deepseek
+  disabled: true
+
+- insert:
+    - id: ui-tokensforce
+      name: 'dsh-tokensforce-login'
