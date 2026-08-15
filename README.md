@@ -2,6 +2,10 @@
 
 [TokensForce](https://tokensforce.com) 的 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）插件：把 tokensforce 网关做成 dsh 的模型提供方，**登录即配置**。
 
+![首次启动弹出登录灯箱](docs/wizard-login.png)
+
+![多企业时选择企业（多组同理）](docs/wizard-orgs.png)
+
 ## 它做什么
 
 - **首跑登录向导**：dsh web 首次启动且没有任何可用模型时，自动弹出近全屏灯箱，
