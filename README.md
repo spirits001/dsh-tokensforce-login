@@ -5,7 +5,7 @@
 
 为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）接入 [TokensForce](https://tokensforce.com) 词元网关：**登录一次，模型即用**。不需要手动填 API Key，不需要改配置文件。
 
-![首次启动弹出登录灯箱](docs/wizard-login.png)
+![dsh-tokensforce-login](docs/banner.png)
 
 ## 安装
 
@@ -23,7 +23,9 @@ dsh web
 ## 使用
 
 1. **首跑**：dsh 启动且尚未配置任何模型时，自动弹出近全屏的 TokensForce 登录窗口
-   （就是 tokensforce.com 的登录页，邮箱验证码登录，与网页版完全一致）；
+   （就是 tokensforce.com 的登录页，邮箱验证码登录，与网页版完全一致）：
+
+   ![首次启动弹出登录灯箱](docs/wizard-login.png)
 2. **选企业 / 选组**：账号属于多个企业或企业下有多个组时让你选，只有一个则自动跳过；
 3. **完成**：所选组的 API Key 与网关地址自动写入，选个模型就能开始对话。
    每个组在「设置 → 模型」里是一行独立的提供方，可编辑、删除、发现模型。
