@@ -18,7 +18,7 @@ const CSS = `
 .tf-hint { margin: 0; color: var(--dsh-dim, #888); font-size: 0.85rem; line-height: 1.4; }
 .tf-label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.25rem; }
 .tf-input { width: 100%; box-sizing: border-box; padding: 0.45rem 0.6rem; font: inherit; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; }
-.tf-frame { width: 100%; height: 24rem; border: 1px solid var(--dsh-border, #555); border-radius: 6px; background: #fff; }
+.tf-frame { width: 100%; height: 30rem; border: 1px solid var(--dsh-border, #555); border-radius: 6px; background: transparent; }
 .tf-list { display: flex; flex-direction: column; gap: 0.4rem; }
 .tf-option { display: flex; align-items: baseline; gap: 0.5rem; text-align: left; padding: 0.5rem 0.7rem; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .tf-option:hover { border-color: var(--dsh-accent, #4a9eff); }

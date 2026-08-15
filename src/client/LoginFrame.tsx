@@ -14,6 +14,24 @@ import type { TokensforceKey as LoginKey } from './locales.ts'
 const LOGIN_MESSAGE = 'tokensforce:login'
 
 /**
+ * Detect the harness UI's current light/dark so the embedded login page can
+ * follow it via the theme param. color-scheme first, then background
+ * luminance, then the system preference.
+ */
+function detectTheme(): 'dark' | 'light' {
+  const scheme = getComputedStyle(document.documentElement).colorScheme
+  if (scheme.includes('dark')) return 'dark'
+  if (scheme.includes('light')) return 'light'
+  const channels = getComputedStyle(document.body).backgroundColor.match(/\d+(?:\.\d+)?/g)
+  if (channels !== null && channels.length >= 3) {
+    const [r = 0, g = 0, b = 0] = channels.map(Number)
+    if (0.299 * r + 0.587 * g + 0.114 * b < 128) return 'dark'
+    return 'light'
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+/**
  * Ask for the deployment address, then run the site login in an iframe.
  * @param props.onToken - called once with the chosen origin and the token.
  * @param props.t - feature copy.
@@ -89,7 +107,7 @@ export function LoginFrame({ onToken, t }: {
       <iframe
         className="tf-frame"
         title={t('loginFrameTitle')}
-        src={`${origin}/login?embed=${encodeURIComponent(window.location.origin)}`}
+        src={`${origin}/login?embed=${encodeURIComponent(window.location.origin)}&theme=${detectTheme()}`}
       />
     </>
   )
