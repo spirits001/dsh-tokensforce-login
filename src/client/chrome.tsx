@@ -12,7 +12,7 @@ import { Modal } from '@deepseek-ai/dsh-client-ui-primitives'
 const STYLE_ID = 'dsh-tokensforce-styles'
 
 const CSS = `
-.tf-dialog { max-width: min(66rem, calc(100vw - 3rem)); }
+.tf-dialog { width: min(66rem, calc(100vw - 3rem)); }
 .tf-body { display: flex; flex-direction: column; gap: 0.75rem; }
 .tf-title { margin: 0; font-size: 1.1rem; font-weight: 600; }
 .tf-hint { margin: 0; color: var(--dsh-dim, #888); font-size: 0.85rem; line-height: 1.4; }
