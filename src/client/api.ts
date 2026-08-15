@@ -171,18 +171,3 @@ export class TokensforceClient {
     return response.json()
   }
 }
-
-/** Normalize a user-typed deployment address into an origin string. */
-export function normalizeOrigin(input: string): string | undefined {
-  const trimmed = input.trim()
-  if (trimmed.length === 0) return undefined
-  const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
-  let url: URL
-  try {
-    url = new URL(withScheme)
-  } catch {
-    return undefined
-  }
-  if (url.protocol !== 'https:' && url.protocol !== 'http:') return undefined
-  return `${url.protocol}//${url.host}`
-}

@@ -12,13 +12,11 @@ import { Modal } from '@deepseek-ai/dsh-client-ui-primitives'
 const STYLE_ID = 'dsh-tokensforce-styles'
 
 const CSS = `
-.tf-dialog { max-width: 30rem; }
+.tf-dialog { max-width: min(66rem, calc(100vw - 3rem)); }
 .tf-body { display: flex; flex-direction: column; gap: 0.75rem; }
 .tf-title { margin: 0; font-size: 1.1rem; font-weight: 600; }
 .tf-hint { margin: 0; color: var(--dsh-dim, #888); font-size: 0.85rem; line-height: 1.4; }
-.tf-label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.25rem; }
-.tf-input { width: 100%; box-sizing: border-box; padding: 0.45rem 0.6rem; font: inherit; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; }
-.tf-frame { width: 100%; height: 30rem; border: 1px solid var(--dsh-border, #555); border-radius: 6px; background: transparent; }
+.tf-frame { width: 100%; height: min(42rem, calc(100vh - 11rem)); border: 1px solid var(--dsh-border, #555); border-radius: 6px; background: transparent; }
 .tf-list { display: flex; flex-direction: column; gap: 0.4rem; }
 .tf-option { display: flex; align-items: baseline; gap: 0.5rem; text-align: left; padding: 0.5rem 0.7rem; border-radius: 6px; border: 1px solid var(--dsh-border, #555); background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .tf-option:hover { border-color: var(--dsh-accent, #4a9eff); }

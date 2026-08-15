@@ -1,12 +1,13 @@
 /**
- * Server-address step plus the embedded login window. The deployed site's own
- * login page (with its captcha) renders in an iframe; on success it posts the
- * session token back, which this component validates by origin and forwards.
+ * The embedded login window. The deployment site's own login page (with its
+ * captcha and its full desktop layout) renders in an iframe sized like a
+ * normal browser window; on success it posts the session token back, which
+ * this component validates by origin and forwards.
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import type { ReactNode } from 'react'
-import { normalizeOrigin } from './api.ts'
+import { SITE_ORIGIN } from './logic.ts'
 import { ensureStyles } from './chrome.tsx'
 import type { TokensforceKey as LoginKey } from './locales.ts'
 
@@ -32,83 +33,34 @@ function detectTheme(): 'dark' | 'light' {
 }
 
 /**
- * Ask for the deployment address, then run the site login in an iframe.
- * @param props.onToken - called once with the chosen origin and the token.
+ * Run the site login in an iframe against the distribution's site.
+ * @param props.onToken - called once with the site origin and the token.
  * @param props.t - feature copy.
- * @returns the address form or the embedded login window.
+ * @returns the embedded login window.
  */
 export function LoginFrame({ onToken, t }: {
   onToken: (origin: string, token: string) => void
   t: (key: LoginKey) => string
 }): ReactNode {
-  const [input, setInput] = useState('')
-  const [origin, setOrigin] = useState<string | undefined>(undefined)
-  const [invalid, setInvalid] = useState(false)
-
   useEffect(() => { ensureStyles() }, [])
 
   useEffect(() => {
-    if (origin === undefined) return
     const listener = (event: MessageEvent): void => {
-      if (event.origin !== origin) return
+      if (event.origin !== SITE_ORIGIN) return
       const data = event.data as { type?: unknown; token?: unknown } | null
       if (typeof data !== 'object' || data === null) return
       if (data.type !== LOGIN_MESSAGE || typeof data.token !== 'string' || data.token.length === 0) return
-      onToken(origin, data.token)
+      onToken(SITE_ORIGIN, data.token)
     }
     window.addEventListener('message', listener)
     return () => { window.removeEventListener('message', listener) }
-  }, [origin, onToken])
-
-  if (origin === undefined) {
-    return (
-      <>
-        <div>
-          <label className="tf-label" htmlFor="tf-address">{t('addressLabel')}</label>
-          <input
-            id="tf-address"
-            className="tf-input"
-            type="text"
-            value={input}
-            placeholder={t('addressPlaceholder')}
-            spellCheck={false}
-            autoComplete="url"
-            onChange={(event) => { setInput(event.target.value); setInvalid(false) }}
-            onKeyDown={(event) => {
-              if (event.key !== 'Enter') return
-              const parsed = normalizeOrigin(input)
-              if (parsed === undefined) setInvalid(true)
-              else setOrigin(parsed)
-            }}
-          />
-        </div>
-        <p className="tf-hint">{invalid ? t('addressInvalid') : t('addressHint')}</p>
-        <div className="tf-actions">
-          <button
-            type="button"
-            className="tf-button tf-primary"
-            disabled={input.trim().length === 0}
-            onClick={() => {
-              const parsed = normalizeOrigin(input)
-              if (parsed === undefined) setInvalid(true)
-              else setOrigin(parsed)
-            }}
-          >
-            {t('continueToLogin')}
-          </button>
-        </div>
-      </>
-    )
-  }
+  }, [onToken])
 
   return (
-    <>
-      <p className="tf-hint">{t('loginHint')}</p>
-      <iframe
-        className="tf-frame"
-        title={t('loginFrameTitle')}
-        src={`${origin}/login?embed=${encodeURIComponent(window.location.origin)}&theme=${detectTheme()}`}
-      />
-    </>
+    <iframe
+      className="tf-frame"
+      title={t('loginFrameTitle')}
+      src={`${SITE_ORIGIN}/login?embed=${encodeURIComponent(window.location.origin)}&theme=${detectTheme()}`}
+    />
   )
 }

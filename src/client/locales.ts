@@ -3,16 +3,8 @@
 export const zh = {
   nav: 'TokensForce',
   onboardingTitle: '连接 TokensForce',
-  onboardingDescription: '登录你的 TokensForce 账号，选择企业和组，模型即可用。密钥和地址会自动配置。',
   sectionDescription: '从你的 TokensForce 账号添加企业组作为模型提供方。',
   addGroup: '添加其他组',
-  addressLabel: '服务地址',
-  addressPlaceholder: 'tokensforce.com',
-  addressHint: 'SaaS 填 tokensforce.com，自建部署填自己的地址。',
-  addressInvalid: '服务地址无法识别',
-  continueToLogin: '前往登录',
-  loginTitle: '登录 TokensForce',
-  loginHint: '在下方窗口中完成登录，成功后会自动继续。',
   loginFrameTitle: 'TokensForce 登录',
   loadingOrgs: '正在获取企业列表…',
   chooseOrg: '选择企业',
@@ -32,7 +24,7 @@ export const zh = {
   failed: '操作失败',
   noOrg: '你的账号还不属于任何企业，请先在 TokensForce 网站上创建或加入企业。',
   noGroup: '当前企业还没有可用的组，请联系企业管理员。',
-  anotherOrg: '换个企业登录',
+  anotherOrg: '换个账号登录',
 } as const
 
 export type TokensforceKey = keyof typeof zh
@@ -40,16 +32,8 @@ export type TokensforceKey = keyof typeof zh
 export const en: Record<TokensforceKey, string> = {
   nav: 'TokensForce',
   onboardingTitle: 'Connect TokensForce',
-  onboardingDescription: 'Sign in to your TokensForce account and pick an organization and group; the key and endpoint configure themselves.',
   sectionDescription: 'Add organization groups from your TokensForce account as model providers.',
   addGroup: 'Add another group',
-  addressLabel: 'Server address',
-  addressPlaceholder: 'tokensforce.com',
-  addressHint: 'tokensforce.com for the SaaS, or your own deployment address.',
-  addressInvalid: 'The server address cannot be parsed',
-  continueToLogin: 'Continue to sign in',
-  loginTitle: 'Sign in to TokensForce',
-  loginHint: 'Complete the sign-in in the window below; this continues automatically afterwards.',
   loginFrameTitle: 'TokensForce sign-in',
   loadingOrgs: 'Loading organizations…',
   chooseOrg: 'Choose an organization',
@@ -69,5 +53,5 @@ export const en: Record<TokensforceKey, string> = {
   failed: 'Something failed',
   noOrg: 'Your account does not belong to any organization yet; create or join one on the TokensForce site first.',
   noGroup: 'This organization has no usable group yet; ask its administrators.',
-  anotherOrg: 'Sign in to another org',
+  anotherOrg: 'Sign in with another account',
 }

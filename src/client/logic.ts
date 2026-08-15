@@ -6,6 +6,13 @@
 
 import type { TokensforceGroup, TokensforceOrg } from './api.ts'
 
+/**
+ * The tokensforce deployment this distribution logs into. The wizard goes
+ * straight to the embedded login against this origin; an OEM or self-hosted
+ * build changes this one constant.
+ */
+export const SITE_ORIGIN = 'https://tokensforce.com'
+
 /** Human text for a rejected call, whatever shape the rejection takes. */
 export function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
@@ -195,8 +202,8 @@ export function clearSession(): void {
 
 /** Wizard snapshot phase; every transition is owned by the wizard controller. */
 export type WizardPhase =
-  | 'server'
   | 'login'
+  | 'linking'
   | 'orgs'
   | 'groups'
   | 'saving'
@@ -209,7 +216,7 @@ export interface WizardState {
   error: string | null
   /** Whether a background call is running. */
   busy: boolean
-  /** Deployment origin once chosen. */
+  /** Deployment origin (the distribution's site). */
   origin: string | undefined
   /** Bearer JWT once the embedded login hands one over. */
   token: string | undefined

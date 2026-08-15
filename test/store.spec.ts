@@ -4,7 +4,6 @@ import {
   planGroupStep, planOrgStep, tokenExpiry,
 } from '../src/client/logic.ts'
 import type { ReadinessState } from '../src/client/logic.ts'
-import { normalizeOrigin } from '../src/client/api.ts'
 
 const org = (id: number, current = false) => ({
   id, name: `org-${id}`, org_no: String(1000 + id), plan: 'basic',
@@ -95,21 +94,5 @@ describe('tokenExpiry', () => {
   it('returns undefined for unreadable tokens', () => {
     expect(tokenExpiry('not-a-jwt')).toBeUndefined()
     expect(tokenExpiry('x.###.y')).toBeUndefined()
-  })
-})
-
-describe('normalizeOrigin', () => {
-  it('accepts bare hosts, adds https, and strips paths', () => {
-    expect(normalizeOrigin('tokensforce.com')).toBe('https://tokensforce.com')
-    expect(normalizeOrigin('https://a.example.com:8443/base')).toBe('https://a.example.com:8443')
-  })
-  it('keeps explicit http for local development', () => {
-    expect(normalizeOrigin('http://localhost:3000')).toBe('http://localhost:3000')
-  })
-  it('rejects empty or non-http schemes', () => {
-    expect(normalizeOrigin('')).toBeUndefined()
-    expect(normalizeOrigin('  ')).toBeUndefined()
-    expect(normalizeOrigin('ftp://x.com')).toBeUndefined()
-    expect(normalizeOrigin('https://')).toBeUndefined()
   })
 })

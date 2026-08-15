@@ -11,7 +11,7 @@ import type { SnapshotStore } from '@deepseek-ai/dsh-client-runtime/client'
 import { TokensforceClient } from './api.ts'
 import type { TokensforceGroup, TokensforceOrg } from './api.ts'
 import {
-  buildProviderDraft, clearSession, messageOf, planGroupStep, planOrgStep, tokenExpiry,
+  SITE_ORIGIN, buildProviderDraft, clearSession, messageOf, planGroupStep, planOrgStep, tokenExpiry,
 } from './logic.ts'
 import type { ReadinessState, WizardState } from './logic.ts'
 
@@ -105,7 +105,7 @@ export class ReadinessStore {
 export class WizardController {
   /** Snapshot the wizard renders from. */
   readonly store: SnapshotStore<WizardState> = createSnapshotStore<WizardState>({
-    phase: 'server', error: null, busy: false, origin: undefined, token: undefined,
+    phase: 'login', error: null, busy: false, origin: SITE_ORIGIN, token: undefined,
     orgs: [], groups: [], selected: undefined, savedRoute: undefined,
   })
 
@@ -117,27 +117,27 @@ export class WizardController {
    */
   constructor(private readonly api: Pick<IApiClient, 'settings' | 'credentials'>) {}
 
-  /** Start the post-login flow (the iframe just produced a token). */
+  /** Continue after the embedded login produced a token. */
   begin(origin: string, token: string): void {
     this.token.value = token
     this.client = new TokensforceClient(origin, this.token)
     this.store.set({
-      phase: 'login', error: null, busy: true, origin, token,
+      phase: 'linking', error: null, busy: true, origin, token,
       orgs: [], groups: [], selected: undefined, savedRoute: undefined,
     })
     void this.enterOrgs()
   }
 
-  /** Reset to the server-address step, keeping the saved login. */
+  /** Reset to the embedded login step, keeping the saved login. */
   reset(): void {
     this.client = undefined
     this.store.set({
-      phase: 'server', error: null, busy: false, origin: undefined, token: undefined,
+      phase: 'login', error: null, busy: false, origin: SITE_ORIGIN, token: undefined,
       orgs: [], groups: [], selected: undefined, savedRoute: undefined,
     })
   }
 
-  /** Reset to the server-address step and drop the saved login. */
+  /** Reset to the embedded login step and drop the saved login. */
   restart(): void {
     clearSession()
     this.reset()

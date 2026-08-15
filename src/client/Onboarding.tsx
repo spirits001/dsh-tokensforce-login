@@ -88,10 +88,9 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
   complete?: () => void
   doneLabel?: string
 }): ReactNode {
-  if (state.phase === 'server') {
+  if (state.phase === 'login') {
     return (
       <>
-        <p className="tf-hint">{t('onboardingDescription')}</p>
         <LoginFrame onToken={onToken} t={t} />
         {complete !== undefined && (
           <div className="tf-actions">
@@ -128,7 +127,7 @@ export function WizardBody({ state, wizard, t, onToken, complete, doneLabel }: {
       </>
     )
   }
-  if (state.phase === 'login') return <Busy text={t('loadingOrgs')} />
+  if (state.phase === 'linking') return <Busy text={t('loadingOrgs')} />
   if (state.phase === 'orgs') {
     if (state.busy) return <Busy text={t('loadingOrgs')} />
     return (

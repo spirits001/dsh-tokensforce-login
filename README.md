@@ -64,15 +64,18 @@ src/client/api.ts       # tokensforce /api/* 浏览器直连客户端
 ### 向导流程
 
 ```
-server（输入部署地址）
-  → login（iframe 嵌 <origin>/login?embed=<dsh origin>，收 token）
-  → orgs（GET /api/user/orgs；单个自动跳过，多个选择，必要时 switch-org 换 token）
+login（直接 iframe 嵌 SITE_ORIGIN/login?embed=<dsh origin>&theme=<明暗>，大弹窗原样渲染站点登录页，收 token）
+  → linking（GET /api/user/orgs）
+  → orgs（单个自动跳过，多个选择，必要时 switch-org 换 token）
   → groups（GET /api/user/groups；单个自动跳过，多个选择）
   → saving（GET /api/user/key?group_id= 拿 host+models；
            settings.mutate 写 llm-pi-ai providers.tokensforce-<gid>；
            credentials.set 写 TOKENSFORCE_<GID>_API_KEY）
   → done
 ```
+
+部署地址是 `logic.ts` 里的 `SITE_ORIGIN` 常量（默认 `https://tokensforce.com`），
+用户无需填写；OEM / 自建发行改这一个常量即可。
 
 readiness 与官方 DeepSeek 首跑步骤同构：已有任一可用 provider 即自动跳过，
 加载失败不弹窗，只有「已加载且无可用 provider」才出现向导。
