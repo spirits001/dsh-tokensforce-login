@@ -36,7 +36,9 @@ dsh web
 > pnpm ≥10 在 profile workspace root 上执行 `add` 时如报 `ERR_PNPM_ADDING_TO_ROOT`，
 > 可手动在 `~/.dsh/profiles/web` 下 `pnpm add -w <包>` 并把包名追加进
 > `package.json` 的 `dsh.profile.bundles`，效果等同。
-> 从 GitHub 安装需要仓库带 `prepare` 脚本先构建（见下「发布到 npm」）。
+> 从 GitHub 安装：仓库带 `prepare` 脚本会自动构建；较新的 pnpm 会拦截 git 依赖的
+> 构建脚本，按 `dsh plugin add` 报错提示把对应键加进该 profile 的
+> `pnpm-workspace.yaml` 的 `allowBuilds` 后重跑即可。
 
 ## 开发
 
@@ -87,17 +89,13 @@ login（iframe 嵌 SITE_ORIGIN/login?embed=<dsh origin>&theme=<明暗>&cb=<防�
 readiness 与官方 DeepSeek 首跑步骤同构：已有任一可用 provider 即自动跳过，
 加载失败不弹窗，只有「已加载且无可用 provider」才出现向导。
 
-## 发布到 npm
+## 发布（npm）
 
-包名 `dsh-tokensforce-login`（无 scope，无需组织）。首次发布前：
+已发布：[dsh-tokensforce-login](https://www.npmjs.com/package/dsh-tokensforce-login)，MIT。
+后续发新版本的流程：
 
-1. `package.json` 去掉 `"private": true`，确定 `license`（目前 UNLICENSED，见文末）；
-2. 在 [npmjs.com](https://npmjs.com) 注册账号后，仓库内 `npm login`；
-3. `pnpm build && npm publish`（`files` 已只含 `lib` 与 `cordis.patch.yml`）；
-4. 发布后用户即可 `dsh plugin --profile web add dsh-tokensforce-login` 一条命令安装。
-
-从 GitHub 直装（不发 npm 的替代路径）：需要 `package.json` 加
-`"prepare": "pnpm build"`，pnpm 拉 git 依赖时会自动构建。
+1. 改动落库、`package.json` 版本号 +1；
+2. `pnpm build && npm publish`（2FA 账号需带 OTP；`files` 已只含 `lib` 与 `cordis.patch.yml`）。
 
 ## 版本对齐
 
@@ -107,4 +105,4 @@ readiness 与官方 DeepSeek 首跑步骤同构：已有任一可用 provider �
 
 ## License
 
-TBD（发布 npm 前需确定）
+[MIT](LICENSE)
