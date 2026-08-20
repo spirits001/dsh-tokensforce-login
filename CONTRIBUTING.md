@@ -66,6 +66,6 @@ readiness 与官方 DeepSeek 首跑步骤同构：已有任一可用 provider �
 
 ## 版本对齐
 
-依赖锁定 `@deepseek-ai/dsh-*@0.1.0-rc.6`（当前 npm 版本）。dsh 处于开发者预览，
+依赖锁定 `@deepseek-ai/dsh-*@0.1.0-rc.8`（当前 npm 版本）。dsh 处于开发者预览，
 升级时回归点：onboarding 步骤契约、`llm-pi-ai` 设置 schema、client bundle 纯度规则、
 `--dsw-alias-*` 变量名。
